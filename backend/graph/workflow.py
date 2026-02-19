@@ -1,20 +1,8 @@
 from langgraph.graph import StateGraph
 from config import MAX_RETRIES
-
-from agents.test_agent import (
-    detect_project_type,
-    install_dependencies,
-    run_tests
-)
-
+from agents.test_agent import detect_project_type, install_dependencies, run_tests
 from agents.fix_agent import apply_fix
-from services.git_service import (
-    clone_repo,
-    create_branch,
-    commit_changes,
-    push_branch
-)
-
+from services.git_service import clone_repo, create_branch, commit_changes, push_branch
 from utils.branch_formatter import format_branch
 
 

@@ -1,13 +1,11 @@
 import time
 import json
 import os
-
 from config import MAX_RETRIES
 from agents.test_agent import run_tests, detect_project_type, install_dependencies
 from agents.fix_agent import apply_fix
 from agents.score_agent import calculate_score
-from services.git_service import clone_repo, create_branch
-from services.git_service import push_branch, commit_changes
+from services.git_service import clone_repo, create_branch, push_branch, commit_changes
 from utils.branch_formatter import format_branch
 
 

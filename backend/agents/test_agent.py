@@ -2,12 +2,9 @@ import os
 import subprocess
 import re
 
+
 def parse_test_output(logs, project_type):
-    failure_info = {
-        "error_type": None,
-        "file": None,
-        "line": None
-    }
+    failure_info = {"error_type": None, "file": None, "line": None}
 
     if project_type == "python":
         match = re.search(r'(.+\.py):(\d+):', logs)
@@ -22,7 +19,7 @@ def parse_test_output(logs, project_type):
         elif "NameError" in logs:
             failure_info["error_type"] = "NameError"
 
-    if project_type == "node":
+    elif project_type == "node":
         match = re.search(r'(.+\.js):(\d+):', logs)
         if match:
             failure_info["file"] = match.group(1)
@@ -36,22 +33,14 @@ def parse_test_output(logs, project_type):
     return failure_info
 
 
-import os
-
-
 def detect_project_type(repo_path):
     files = os.listdir(repo_path)
 
     if "requirements.txt" in files or "setup.py" in files or "pyproject.toml" in files:
         return "python"
-
     if "package.json" in files:
         return "node"
-
     return None
-
-
-    
 
 
 def install_dependencies(repo_path, project_type):
@@ -64,25 +53,16 @@ def install_dependencies(repo_path, project_type):
                     cwd=repo_path,
                     check=True
                 )
-
         elif project_type == "node":
-            subprocess.run(
-                ["npm", "install"],
-                cwd=repo_path,
-                check=True
-            )
+            subprocess.run(["npm", "install"], cwd=repo_path, check=True)
 
         return True, "Dependencies installed successfully"
-
     except Exception as e:
         return False, str(e)
 
 
 def run_tests(repo_name, project_type):
-
     try:
-        abs_path = os.path.abspath(repo_name)
-
         if project_type == "python":
             test_command = "pytest --maxfail=1 --disable-warnings -q"
         elif project_type == "node":
@@ -95,23 +75,10 @@ def run_tests(repo_name, project_type):
             "-v", f"{os.path.abspath(repo_name)}:/app",
             "-w", "/app",
             "cicd-sandbox",
-            "bash", "-c",
+            "bash", "-c", test_command
         ]
 
-        if project_type == "python":
-            test_command = "pytest --maxfail=1 --disable-warnings -q"
-        elif project_type == "node":
-            test_command = "npm test"
-        else:
-            return -1, "Unsupported project type"
-
-        result = subprocess.run(
-            command + [test_command],
-            capture_output=True,
-            text=True
-        )
-
+        result = subprocess.run(command, capture_output=True, text=True)
         return result.returncode, result.stdout + result.stderr
-
     except Exception as e:
         return -1, str(e)
