@@ -19,7 +19,7 @@ Our system does it automatically.
 
 #How It Works — Flowchart
 
-
+```
 ┌──────────────────────────────┐
 │ 1️⃣ User Enters GitHub Repo   │
 │    (React Dashboard)         │
@@ -83,9 +83,11 @@ Our system does it automatically.
                                                    │
                                                    ▼
                                               (Back to Step 5)
+```
 
 
 
 🎯 One-Line Explanation
 User gives a repo → we test → if broken → AI fixes → pushes → waits for CI → retries if needed → shows everything in dashboard.
+
 
